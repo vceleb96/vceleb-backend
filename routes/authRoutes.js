@@ -1,4 +1,9 @@
-router.post("/login", async (req, res) => {
+import express from "express";
+import jwt from "jsonwebtoken";
+
+const router = express.Router();
+
+router.post("/login", (req, res) => {
   const token = jwt.sign(
     { role: "admin" },
     process.env.JWT_SECRET,
@@ -7,3 +12,5 @@ router.post("/login", async (req, res) => {
 
   res.json({ token });
 });
+
+export default router;
