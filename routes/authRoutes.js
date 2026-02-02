@@ -1,5 +1,4 @@
 import express from "express";
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Admin from "../models/Admin.js";
 
@@ -10,12 +9,12 @@ router.post("/login", async (req, res) => {
 
   const admin = await Admin.findOne({ email });
   if (!admin) {
-    return res.status(401).json({ message: "Invalid credentials" });
+    return res.status(401).json({ message: "Invalid email" });
   }
 
-  const match = await bcrypt.compare(password, admin.password);
-  if (!match) {
-    return res.status(401).json({ message: "Invalid credentials" });
+  // 🔥 SIMPLE PASSWORD CHECK (TEMPORARY)
+  if (password !== admin.password) {
+    return res.status(401).json({ message: "Invalid password" });
   }
 
   const token = jwt.sign(
