@@ -1,16 +1,9 @@
 import express from "express";
-import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
 router.post("/login", (req, res) => {
-  const token = jwt.sign(
-    { role: "admin" },
-    process.env.JWT_SECRET,
-    { expiresIn: "1d" }
-  );
-
-  res.json({ token });
+  res.json({ token: "TEST_TOKEN" });
 });
 
 export default router;
