@@ -3,14 +3,13 @@ import Celebrity from "../models/Celebrity.js";
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
-  const celeb = await Celebrity.create(req.body);
-  res.json(celeb);
-});
-
 router.get("/", async (req, res) => {
-  const celebs = await Celebrity.find();
-  res.json(celebs);
+  try {
+    const celebs = await Celebrity.find();
+    res.json(celebs);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 export default router;
