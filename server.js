@@ -9,16 +9,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ✅ MongoDB Atlas connection (SAFE & CLEAN)
+// 🔥 MongoDB connection (LOGS SUCCESS OR ERROR)
 mongoose
-  .connect(
-    "mongodb://vcelebuser:vEBS811@vceleb-shard-00-00.zq2jhcq.mongodb.net:27017,vceleb-shard-00-01.zq2jhcq.mongodb.net:27017,vceleb-shard-00-02.zq2jhcq.mongodb.net:27017/vceleb?ssl=true&replicaSet=atlas-shard-0&authSource=admin&retryWrites=true&w=majority"
-  )
-  .then(() => console.log("MongoDB connected"))
-  .catch(err => console.error(err));
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("MongoDB connected");
+  })
+  .catch(err => {
+    console.error("MongoDB connection error:", err.message);
+  });
 
-
-// Test route
 app.get("/", (req, res) => {
   res.send("VCeleb backend running");
 });
