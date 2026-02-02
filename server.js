@@ -1,18 +1,21 @@
-import celebrityRoutes from "./routes/celebrityRoutes.js";
-import authRoutes from "./routes/authRoutes.js";
-
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
+import authRoutes from "./routes/authRoutes.js";
+import celebrityRoutes from "./routes/celebrityRoutes.js";
 import dotenv from "dotenv";
 
 dotenv.config();
 
 const app = express();
-app.use("/api/celebrities", celebrityRoutes);
-app.use("/api/auth", authRoutes);
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:5173"
+}));
+
+
 app.use(express.json());
+app.use("/api/auth", authRoutes);
+app.use("/api/celebrities", celebrityRoutes);
 
 // 🔥 MongoDB connection (LOGS SUCCESS OR ERROR)
 mongoose
