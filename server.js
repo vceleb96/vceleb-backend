@@ -1,4 +1,5 @@
 import celebrityRoutes from "./routes/celebrityRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 import express from "express";
 import mongoose from "mongoose";
@@ -9,6 +10,7 @@ dotenv.config();
 
 const app = express();
 app.use("/api/celebrities", celebrityRoutes);
+app.use("/api/auth", authRoutes);
 app.use(cors());
 app.use(express.json());
 
