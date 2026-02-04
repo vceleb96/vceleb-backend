@@ -1,34 +1,29 @@
-import express from "express";
-import Celebrity from "../models/Celebrity.js";
+const express = require("express");
+const Celebrity = require("../models/Celebrity");
+const authMiddleware = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  try {
-    const celebs = await Celebrity.find();
-    res.json(celebs);
-  } catch (error) {
-    res.status(500).json({ message: "Server error" });
-  }
-
-  // CREATE a celebrity (admin)
-router.post("/", async (req, res) => {
-  try {
-    const celeb = new Celebrity(req.body);
-    await celeb.save();
-    res.status(201).json(celeb);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-
-  // DELETE a celebrity (admin)
-router.delete("/:id", async (req, res) => {
-  try {
-    await Celebrity.findByIdAndDelete(req.params.id);
-    res.json({ message: "Celebrity deleted" });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
+  const celebs = await Celebrity.find();
+  res.json(celebs);
 });
 
-export default router;
+router.post("/", authMiddleware, async (req, res) => {
+  const { name, category, price } = req.body;
+
+  if (!name || !category || !price) {
+    return res.status(400).json({ message: "All fields required" });
+  }
+
+  const celeb = new Celebrity({ name, category, price });
+  await celeb.save();
+  res.json(celeb);
+});
+
+router.delete("/:id", authMiddleware, async (req, res) => {
+  await Celebrity.findByIdAndDelete(req.params.id);
+  res.json({ message: "Deleted" });
+});
+
+module.exports = router;

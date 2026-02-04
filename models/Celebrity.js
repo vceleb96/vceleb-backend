@@ -1,23 +1,10 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
-const celebritySchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true
-    },
-    category: {
-      type: String,
-      required: true
-    },
-    image: {
-      type: String
-    },
-    price: {
-      type: String
-    }
-  },
-  { timestamps: true }
-);
+const celebritySchema = new mongoose.Schema({
+  name: String,
+  category: String,
+  price: Number
+});
 
-export default mongoose.model("Celebrity", celebritySchema);
+module.exports = mongoose.model("Celebrity", celebritySchema);
+
