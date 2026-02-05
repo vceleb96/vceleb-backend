@@ -1,25 +1,17 @@
 const express = require("express");
 const Booking = require("../models/Booking");
+const auth = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-// 📩 Public: create booking
 router.post("/", async (req, res) => {
-  const { name, email, message, celebrity } = req.body;
-
-  if (!name || !email || !celebrity) {
-    return res.status(400).json({ message: "Required fields missing" });
-  }
-
-  const booking = new Booking({
-    name,
-    email,
-    message,
-    celebrity
-  });
-
+  const booking = new Booking(req.body);
   await booking.save();
-  res.json({ message: "Booking submitted" });
+  res.json({ message: "Booking saved" });
+});
+
+router.get("/", auth, async (req, res) => {
+  res.json(await Booking.find().sort({ createdAt: -1 }));
 });
 
 module.exports = router;
