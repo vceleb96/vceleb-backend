@@ -8,10 +8,21 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   const admin = await Admin.findOne({ email });
-  if (!admin || admin.password !== password)
-    return res.status(401).json({ message: "Invalid login" });
 
-  const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET);
+  if (!admin) {
+    return res.status(401).json({ message: "Invalid email" });
+  }
+
+  if (admin.password !== password) {
+    return res.status(401).json({ message: "Invalid password" });
+  }
+
+  const token = jwt.sign(
+    { id: admin._id },
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" }
+  );
+
   res.json({ token });
 });
 

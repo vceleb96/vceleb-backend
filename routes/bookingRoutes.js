@@ -8,6 +8,11 @@ router.post("/", async (req, res) => {
   const booking = new Booking(req.body);
   await booking.save();
   res.json({ message: "Booking saved" });
+if (!req.body.name || !req.body.email || !req.body.celebrity) {
+  return res.status(400).json({ message: "Missing required fields" });
+}
+
+
 });
 
 router.get("/", auth, async (req, res) => {
