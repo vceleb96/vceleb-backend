@@ -9,7 +9,14 @@ const bookingRoutes = require("./routes/bookingRoutes");
 
 const app = express();
 
-app.use(cors({ origin: "*" }));
+app.use(cors({
+  origin: [
+    "https://vceleb.in",
+    "https://www.vceleb.in",
+    "https://vceleb-frontend.onrender.com",
+    "http://localhost:5173"
+  ]
+}));
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
