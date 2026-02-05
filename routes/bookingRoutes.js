@@ -5,15 +5,18 @@ const auth = require("../middleware/authMiddleware");
 const router = express.Router();
 
 router.post("/", async (req, res) => {
-  const booking = new Booking(req.body);
-  await booking.save();
-  res.json({ message: "Booking saved" });
-if (!req.body.name || !req.body.email || !req.body.celebrity) {
+  const { name, email, celebrity } = req.body;
+
+if (!name || !email || !celebrity) {
   return res.status(400).json({ message: "Missing required fields" });
 }
 
-
+  const booking = await Booking.create(req.body);
+  res.json(booking);
 });
+
+
+
 
 router.get("/", auth, async (req, res) => {
   res.json(await Booking.find().sort({ createdAt: -1 }));
