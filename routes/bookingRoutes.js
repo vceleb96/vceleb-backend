@@ -9,7 +9,7 @@ const router = express.Router();
 /**
  * CREATE BOOKING (PUBLIC)
  * - Saves booking
- * - Emails admin (Gmail SMTP)
+ * - Emails admin
  */
 router.post("/", async (req, res) => {
   try {
@@ -20,7 +20,7 @@ router.post("/", async (req, res) => {
       message: req.body.message
     });
 
-    // 📧 Email ADMIN
+    // 📧 EMAIL ADMIN
     await sendEmail({
       to: process.env.EMAIL_USER,
       subject: "New Booking Request - VCeleb",
@@ -49,6 +49,7 @@ router.get("/", auth, adminOnly, async (req, res) => {
     const bookings = await Booking.find().sort({ createdAt: -1 });
     res.json(bookings);
   } catch (err) {
+    console.error("Fetch bookings failed:", err);
     res.status(500).json({ message: "Failed to fetch bookings" });
   }
 });
@@ -72,10 +73,23 @@ router.put("/:id/status", auth, adminOnly, async (req, res) => {
       return res.status(404).json({ message: "Booking not found" });
     }
 
-    // 📧 Email CUSTOMER
+    // 📧 EMAIL CUSTOMER
     await sendEmail({
       to: booking.email,
-      subject: "Your Booking Status - VCeleb",
+      subject: "Your Booking Status Updated - VCeleb",
       html: `
         <h3>Booking Status Updated</h3>
-        <p><strong>Celebrity:</strong> ${boo
+        <p><strong>Celebrity:</strong> ${booking.celebrity}</p>
+        <p><strong>Status:</strong> ${booking.status}</p>
+        <p>We will contact you shortly if further details are needed.</p>
+      `
+    });
+
+    res.json(booking);
+  } catch (err) {
+    console.error("Status update failed:", err);
+    res.status(500).json({ message: "Status update failed" });
+  }
+});
+
+module.exports = router;
