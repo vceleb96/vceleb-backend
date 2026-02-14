@@ -1,10 +1,32 @@
 const mongoose = require("mongoose");
 
-const celebritySchema = new mongoose.Schema({
-  name: String,
-  category: String,
-  price: Number,
-  image: String
-});
+const CelebritySchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true
+    },
+    category: {
+      type: String,
+      required: true,
+      enum: [
+        "Bollywood",
+        "TV",
+        "Singer/Band",
+        "Influencer",
+        "Others"
+      ]
+    },
+    price: {
+      type: Number,
+      required: true
+    },
+    image: {
+      type: String,
+      required: true
+    }
+  },
+  { timestamps: true }
+);
 
-module.exports = mongoose.model("Celebrity", celebritySchema);
+module.exports = mongoose.model("Celebrity", CelebritySchema);
