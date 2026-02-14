@@ -1,25 +1,24 @@
 const express = require("express");
 const Booking = require("../models/Booking");
 const auth = require("../middleware/authMiddleware");
+const adminOnly = require("../middleware/adminOnly");
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
-  const { name, email, celebrity } = req.body;
-
-if (!name || !email || !celebrity) {
-  return res.status(400).json({ message: "Missing required fields" });
-}
-
-  const booking = await Booking.create(req.body);
-  res.json(booking);
+// GET ALL BOOKINGS (ADMIN)
+router.get("/", auth, adminOnly, async (req, res) => {
+  const bookings = await Booking.find();
+  res.json(bookings);
 });
 
-
-
-
-router.get("/", auth, async (req, res) => {
-  res.json(await Booking.find().sort({ createdAt: -1 }));
+// UPDATE STATUS (ADMIN)
+router.put("/:id/status", auth, adminOnly, async (req, res) => {
+  const booking = await Booking.findByIdAndUpdate(
+    req.params.id,
+    { status: req.body.status },
+    { new: true }
+  );
+  res.json(booking);
 });
 
 module.exports = router;

@@ -36,6 +36,8 @@ app.use(cors({
 }));
 app.use("/api/dashboard", dashboardRoutes);
 
+app.use("/api/seed", require("./routes/seedRoutes"));
+
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);

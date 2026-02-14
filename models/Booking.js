@@ -1,13 +1,18 @@
 const mongoose = require("mongoose");
 
-const bookingSchema = new mongoose.Schema(
+const BookingSchema = new mongoose.Schema(
   {
     name: String,
     email: String,
+    celebrity: String,
     message: String,
-    celebrity: String
+    status: {
+      type: String,
+      enum: ["Pending", "Approved", "Rejected"],
+      default: "Pending"
+    }
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Booking", bookingSchema);
+module.exports = mongoose.model("Booking", BookingSchema);
