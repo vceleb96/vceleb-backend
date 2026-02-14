@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 require("dotenv").config();
 require('./middleware/authMiddleware');
 require('./middleware/adminOnly');
@@ -33,7 +34,7 @@ app.use(cors({
   credentials: true,
   optionsSuccessStatus: 200
 }));
-
+app.use("/api/dashboard", dashboardRoutes);
 
 app.use(express.json());
 

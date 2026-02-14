@@ -6,7 +6,7 @@ const adminOnly = require("../middleware/adminOnly");
 const router = express.Router();
 
 /**
- * Public – anyone can view celebrities
+ * GET ALL CELEBRITIES (PUBLIC)
  */
 router.get("/", async (req, res) => {
   const celebs = await Celebrity.find();
@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
 });
 
 /**
- * Admin only – create celebrity
+ * ADD CELEBRITY (ADMIN)
  */
 router.post("/", auth, adminOnly, async (req, res) => {
   const celeb = new Celebrity(req.body);
@@ -23,7 +23,7 @@ router.post("/", auth, adminOnly, async (req, res) => {
 });
 
 /**
- * Admin only – update celebrity
+ * UPDATE CELEBRITY (ADMIN)
  */
 router.put("/:id", auth, adminOnly, async (req, res) => {
   const updated = await Celebrity.findByIdAndUpdate(
@@ -35,7 +35,7 @@ router.put("/:id", auth, adminOnly, async (req, res) => {
 });
 
 /**
- * Admin only – delete celebrity
+ * DELETE CELEBRITY (ADMIN)
  */
 router.delete("/:id", auth, adminOnly, async (req, res) => {
   await Celebrity.findByIdAndDelete(req.params.id);
