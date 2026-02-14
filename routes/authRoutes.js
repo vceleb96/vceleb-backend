@@ -17,11 +17,12 @@ router.post("/login", async (req, res) => {
     return res.status(401).json({ message: "Invalid password" });
   }
 
-  const token = jwt.sign(
-    { id: admin._id },
-    process.env.JWT_SECRET,
-    { expiresIn: "1d" }
-  );
+ const token = jwt.sign(
+  { id: admin._id, role: admin.role },
+  process.env.JWT_SECRET,
+  { expiresIn: "1d" }
+);
+
 
   res.json({ token });
 });
