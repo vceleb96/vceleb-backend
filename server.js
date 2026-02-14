@@ -9,14 +9,28 @@ const bookingRoutes = require("./routes/bookingRoutes");
 
 const app = express();
 
+const allowedOrigins = [
+  "https://vceleb.in",
+  "https://www.vceleb.in",
+  "http://localhost:5173"
+];
+
 app.use(cors({
-  origin: [
-    "https://vceleb.in",
-    "https://www.vceleb.in",
-    "https://vceleb-frontend.onrender.com",
-    "http://localhost:5173"
-  ]
+  origin: function (origin, callback) {
+    // Allow server-to-server, Postman, curl
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(null, false); // <-- IMPORTANT
+  },
+  credentials: true,
+  optionsSuccessStatus: 200
 }));
+
+
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
