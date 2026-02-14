@@ -2,19 +2,28 @@ const express = require("express");
 const Celebrity = require("../models/Celebrity");
 const auth = require("../middleware/authMiddleware");
 const adminOnly = require("../middleware/adminOnly");
+const authOptional = require("../middleware/authOptional");
 
 const router = express.Router();
 
 /**
- * GET ALL CELEBRITIES (PUBLIC)
+ * GET CELEBRITIES
+ * - Public: NO price field
+ * - Admin: full data
  */
-router.get("/", async (req, res) => {
-  const celebs = await Celebrity.find();
+router.get("/", authOptional, async (req, res) => {
+  let celebs = await Celebrity.find().lean();
+
+  // 👥 PUBLIC → strip price
+  if (!req.user || !req.user.isAdmin) {
+    celebs = celebs.map(({ price, ...rest }) => rest);
+  }
+
   res.json(celebs);
 });
 
 /**
- * ADD CELEBRITY (ADMIN)
+ * ADD CELEBRITY (ADMIN ONLY)
  */
 router.post("/", auth, adminOnly, async (req, res) => {
   const celeb = new Celebrity(req.body);
@@ -23,7 +32,7 @@ router.post("/", auth, adminOnly, async (req, res) => {
 });
 
 /**
- * UPDATE CELEBRITY (ADMIN)
+ * UPDATE CELEBRITY (ADMIN ONLY)
  */
 router.put("/:id", auth, adminOnly, async (req, res) => {
   const updated = await Celebrity.findByIdAndUpdate(
@@ -35,7 +44,7 @@ router.put("/:id", auth, adminOnly, async (req, res) => {
 });
 
 /**
- * DELETE CELEBRITY (ADMIN)
+ * DELETE CELEBRITY (ADMIN ONLY)
  */
 router.delete("/:id", auth, adminOnly, async (req, res) => {
   await Celebrity.findByIdAndDelete(req.params.id);
