@@ -2,6 +2,10 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
+require('./middleware/authMiddleware');
+require('./middleware/adminOnly');
+
+
 
 const authRoutes = require("./routes/authRoutes");
 const celebrityRoutes = require("./routes/celebrityRoutes");

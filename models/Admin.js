@@ -1,25 +1,21 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
-const adminSchema = new mongoose.Schema(
-  {
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      lowercase: true,
-      trim: true
-    },
-    password: {
-      type: String,
-      required: true
-    },
-    role: {
-      type: String,
-      enum: ["admin"],
-      default: "admin"
-    }
+const adminSchema = new mongoose.Schema({
+  email: String,
+  password: {
+    type: String,
+    required: true
   },
-  { timestamps: true }
-);
+  isAdmin: {
+    type: Boolean,
+    default: true
+  }
+});
 
-module.exports = mongoose.model("Admin", adminSchema);
+// password comparison helper
+adminSchema.methods.comparePassword = function (candidatePassword) {
+  return bcrypt.compare(candidatePassword, this.password);
+};
+
+module.exports = mongoose.model('Admin', adminSchema);
